@@ -16,8 +16,10 @@ import com.lorenzofelletti.permissions.PermissionManager
 import com.lorenzofelletti.permissions.dispatcher.dsl.*
 import com.lorenzofelletti.simpleblescanner.BuildConfig.DEBUG
 import com.lorenzofelletti.simpleblescanner.blescanner.BleScanManager
+import com.lorenzofelletti.simpleblescanner.blescanner.BleScanRunner
 import com.lorenzofelletti.simpleblescanner.blescanner.adapter.BleDeviceAdapter
 import com.lorenzofelletti.simpleblescanner.blescanner.model.BleDevice
+import com.lorenzofelletti.simpleblescanner.blescanner.model.BleDevice.Companion.createBleDevicesList
 import com.lorenzofelletti.simpleblescanner.blescanner.model.BleScanCallback
 
 class MainActivity : AppCompatActivity() {
@@ -53,7 +55,7 @@ class MainActivity : AppCompatActivity() {
 
         // RecyclerView handling
         val rvFoundDevices = findViewById<View>(R.id.rv_found_devices) as RecyclerView
-        foundDevices = BleDevice.createBleDevicesList()
+        foundDevices = createBleDevicesList()
         val adapter = BleDeviceAdapter(foundDevices)
         rvFoundDevices.adapter = adapter
         rvFoundDevices.layoutManager = LinearLayoutManager(this)
@@ -77,6 +79,7 @@ class MainActivity : AppCompatActivity() {
             }
         }))
 
+
         // Adding the actions the manager must do before and after scanning
         bleScanManager.beforeScanActions.add { btnStartScan.isEnabled = false }
         bleScanManager.beforeScanActions.add {
@@ -94,6 +97,8 @@ class MainActivity : AppCompatActivity() {
 
             // Checks if the required permissions are granted and starts the scan if so, otherwise it requests them
             permissionManager checkRequestAndDispatch BLE_PERMISSION_REQUEST_CODE
+
+            BleScanRunner(this.btManager).searchDevices()
         }
     }
 
@@ -118,6 +123,7 @@ class MainActivity : AppCompatActivity() {
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.BLUETOOTH_ADMIN,
+            Manifest.permission.BLUETOOTH_CONNECT
         )
     }
 }
