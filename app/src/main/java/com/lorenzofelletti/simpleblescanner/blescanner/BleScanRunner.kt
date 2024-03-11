@@ -22,8 +22,6 @@ class BleScanRunner(private val btManager: BluetoothManager) {
         bleScanManager = BleScanManager(btManager, 5000, scanCallback = BleScanCallback({ deviceFound ->
             val macAdress = deviceFound!!.device.address.toString()
             val rssi = deviceFound.rssi
-            val txPower = deviceFound.txPower
-            val plZero = 0.0
 
             // verificar e documentar essa função
             val distance = calculateDistanceLDPLM(rssi)
