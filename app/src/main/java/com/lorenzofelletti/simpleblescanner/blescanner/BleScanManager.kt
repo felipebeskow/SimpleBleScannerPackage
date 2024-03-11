@@ -47,7 +47,7 @@ class BleScanManager(
             stopScan()
         } else {
             // stops scanning after scanPeriod millis
-            if (scanPeriod.equals(0)) handler.postDelayed({ stopScan() }, scanPeriod)
+            if (!scanPeriod.equals(0)) handler.postDelayed({ stopScan() }, scanPeriod)
 
             // execute all the functions to execute before scanning
             executeBeforeScanActions()
