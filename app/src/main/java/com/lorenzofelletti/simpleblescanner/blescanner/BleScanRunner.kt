@@ -19,14 +19,14 @@ class BleScanRunner(private val btManager: BluetoothManager) {
 
         foundDevices = emptyList<List<String>>().toMutableList()
 
-        bleScanManager = BleScanManager(btManager, 5000, scanCallback = BleScanCallback({
-            val macAdress = it?.device?.address.toString()
-            val rssi = it?.rssi
-            val txPower = it?.txPower
+        bleScanManager = BleScanManager(btManager, 5000, scanCallback = BleScanCallback({ deviceFound ->
+            val macAdress = deviceFound!!.device.address.toString()
+            val rssi = deviceFound.rssi
+            val txPower = deviceFound.txPower
             val plZero = 0.0
 
             // verificar e documentar essa função
-            val distance = 10.0001
+            val distance = calculateDistanceLDPLM(rssi)
 
             val device:MutableList<String> = mutableListOf(macAdress, rssi.toString(), String.format("%.3f", distance))
 
@@ -37,7 +37,7 @@ class BleScanRunner(private val btManager: BluetoothManager) {
                 }
 
             }
-            if (DEBUG) Log.e(TAG, "Device: $device $hasDevice")
+            if (DEBUG && !hasDevice) Log.e(TAG, "Device: $device $rssi $distance")
 
             if (!hasDevice) foundDevices += device
 
@@ -49,6 +49,12 @@ class BleScanRunner(private val btManager: BluetoothManager) {
 
         bleScanManager.scanBleDevices()
 
+    }
+
+    fun calculateDistanceLDPLM(RSSI: Int): Double {
+        val RSSI0 = -66
+        val n = 2.0
+        return 10.0.pow((RSSI0 - RSSI) / (10 * n))
     }
 
     companion object {
