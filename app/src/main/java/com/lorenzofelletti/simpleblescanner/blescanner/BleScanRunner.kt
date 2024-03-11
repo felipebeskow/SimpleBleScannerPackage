@@ -7,7 +7,7 @@ import com.lorenzofelletti.simpleblescanner.BuildConfig.DEBUG
 import com.lorenzofelletti.simpleblescanner.blescanner.model.BleScanCallback
 import kotlin.math.pow
 
-class BleScanRunner(private val btManager: BluetoothManager) {
+class BleScanRunner(private val btManager: BluetoothManager, private val periodTime: Long = 0) {
     private lateinit var bleScanManager: BleScanManager
 
     private lateinit var foundDevices: MutableList<List<String>>
@@ -19,7 +19,7 @@ class BleScanRunner(private val btManager: BluetoothManager) {
 
         foundDevices = emptyList<List<String>>().toMutableList()
 
-        bleScanManager = BleScanManager(btManager, 5000, scanCallback = BleScanCallback({ deviceFound ->
+        bleScanManager = BleScanManager(btManager, periodTime, scanCallback = BleScanCallback({ deviceFound ->
             val macAdress = deviceFound!!.device.address.toString()
             val rssi = deviceFound.rssi
 

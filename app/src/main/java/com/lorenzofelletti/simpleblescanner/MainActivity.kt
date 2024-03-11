@@ -98,7 +98,7 @@ class MainActivity : AppCompatActivity() {
             // Checks if the required permissions are granted and starts the scan if so, otherwise it requests them
             permissionManager checkRequestAndDispatch BLE_PERMISSION_REQUEST_CODE
 
-            BleScanRunner(this.btManager).searchDevices()
+            BleScanRunner(this.btManager,5000).searchDevices()
         }
     }
 
